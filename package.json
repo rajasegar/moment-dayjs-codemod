@@ -6,7 +6,8 @@
     "test": "codemod-cli test",
     "test:coverage": "codemod-cli test --coverage",
     "update-docs": "codemod-cli update-docs",
-    "coveralls": "cat ./coverage/lcov.info | node node_modules/.bin/coveralls"
+    "coveralls": "cat ./coverage/lcov.info | node node_modules/.bin/coveralls",
+    "deploy": "git push && git push --tags && npm publish"
   },
   "bin": "./bin/cli.js",
   "keywords": [

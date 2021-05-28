@@ -3,7 +3,6 @@ name: CI
 on:
   push:
     branches:
-      - master
       - main
       - 'v*' # older version branches
     tags:
@@ -16,6 +15,8 @@ jobs:
   lint:
     name: Linting
     runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
+
 
     steps:
     - uses: actions/checkout@v1
@@ -30,6 +31,7 @@ jobs:
   test:
     name: Tests
     runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
 
     strategy:
       matrix:
@@ -48,6 +50,7 @@ jobs:
   floating-test:
     name: Floating dependencies
     runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
 
     steps:
     - uses: actions/checkout@v1
