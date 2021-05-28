@@ -27,9 +27,23 @@ module.exports = function transformer(file, api) {
   const j = getParser(api);
   //const options = getOptions();
 
-  // Change moment() to dayjs()
   const root = j(file.source);
 
+  // Change imports
+  root
+    .find(j.ImportDeclaration, {
+      source: {
+        value: 'moment',
+      },
+    })
+    .replaceWith(() => {
+      return j.importDeclaration(
+        [j.importDefaultSpecifier(j.identifier('dayjs'))],
+        j.stringLiteral('dayjs')
+      );
+    });
+
+  // Change moment() to dayjs()
   root.find(j.CallExpression, { callee: { name: 'moment' } }).forEach((path) => {
     path.value.callee.name = 'dayjs';
   });
