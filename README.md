@@ -1,7 +1,9 @@
 # moment-dayjs-codemod
 
+![Build and Deploy](https://github.com/rajasegar/moment-dayjs-codemod/workflows/CI/badge.svg)
+[![npm version](http://img.shields.io/npm/v/moment-dayjs-codemod.svg?style=flat)](https://npmjs.org/package/moment-dayjs-codemod "View this project on npm")
 
-A collection of codemods for moment-dayjs-codemod.
+A collection of codemods for migrating from [moment.js](https://momentjs.com/) to [day.js](https://day.js.org/)
 
 ## Usage
 
