@@ -2,6 +2,7 @@
 
 ![Build and Deploy](https://github.com/rajasegar/moment-dayjs-codemod/workflows/CI/badge.svg)
 [![npm version](http://img.shields.io/npm/v/moment-dayjs-codemod.svg?style=flat)](https://npmjs.org/package/moment-dayjs-codemod "View this project on npm")
+[![Coverage Status](https://coveralls.io/repos/github/rajasegar/moment-dayjs-codemod/badge.svg?branch=main)](https://coveralls.io/github/rajasegar/moment-dayjs-codemod?branch=main)
 
 A collection of codemods for migrating from [moment.js](https://momentjs.com/) to [day.js](https://day.js.org/)
 
