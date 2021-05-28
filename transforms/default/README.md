@@ -52,6 +52,8 @@ moment().day(-14);
 moment().add(7, 'days');
 moment().subtract(7, 'days');
 
+moment.isDate(new Date());
+
 ```
 
 **Output** (<small>[basic.output.js](transforms/default/__testfixtures__/basic.output.js)</small>):
@@ -78,6 +80,8 @@ dayjs().set('day', -14);
 
 dayjs().add(7, 'day');
 dayjs().subtract(7, 'day');
+
+dayjs(new Date()).isValid();
 
 ```
 <!--FIXTURES_CONTENT_END-->

@@ -20,3 +20,5 @@ moment().day(-14);
 
 moment().add(7, 'days');
 moment().subtract(7, 'days');
+
+moment.isDate(new Date());

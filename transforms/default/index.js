@@ -122,6 +122,30 @@ module.exports = function transformer(file, api) {
     }
   });
 
+  // replace moment.isDate
+  root
+    .find(j.CallExpression, {
+      callee: {
+        object: {
+          name: 'moment',
+        },
+
+        property: {
+          name: 'isDate',
+        },
+      },
+    })
+    .replaceWith((path) => {
+      return j.callExpression(
+        j.memberExpression(
+          j.callExpression(j.identifier('dayjs'), path.value.arguments),
+          j.identifier('isValid'),
+          false
+        ),
+        []
+      );
+    });
+
   return root.toSource({ quote: 'single' });
 };
 

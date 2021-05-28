@@ -20,3 +20,5 @@ dayjs().set('day', -14);
 
 dayjs().add(7, 'day');
 dayjs().subtract(7, 'day');
+
+dayjs(new Date()).isValid();
