@@ -46,3 +46,9 @@ node ./bin/cli.js <TRANSFORM NAME> path/of/files/ or/some**/*glob.js
 ### Update Documentation
 
 * `yarn update-docs`
+
+### References
+- [AST Explorer](https://astexplorer.net/#/gist/7598ca87108e752f21bee9bffbd58ec2/149bbcbeebac06f6dd2290d75e775ec44578694c)
+- https://ottonova.tech/why-we-switched-from-moment-js-to-day-js/
+- https://medium.datadriveninvestor.com/https-medium-com-sabesan96-why-you-should-choose-day-js-instead-of-moment-js-9cf7bb274bbd
+

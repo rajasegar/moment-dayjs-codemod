@@ -1,27 +1,7 @@
-// https://astexplorer.net/#/gist/7598ca87108e752f21bee9bffbd58ec2/149bbcbeebac06f6dd2290d75e775ec44578694c
-/*
- * References:
- * https://ottonova.tech/why-we-switched-from-moment-js-to-day-js/
- * https://medium.datadriveninvestor.com/https-medium-com-sabesan96-why-you-should-choose-day-js-instead-of-moment-js-9cf7bb274bbd
- */
-
 const { getParser } = require('codemod-cli').jscodeshift;
 //const { getOptions } = require('codemod-cli');
 
-const unitsMap = {
-  years: 'year',
-  days: 'day',
-};
-
-// change diff units to singular form
-function toSingularUnits(root, j, methodName) {
-  root.find(j.CallExpression, { callee: { property: { name: methodName } } }).forEach((node) => {
-    const diffArgs = node.value.arguments;
-    if (diffArgs.length > 1) {
-      diffArgs[1].value = unitsMap[diffArgs[1].value] || diffArgs[1].value;
-    }
-  });
-}
+const { toSingularUnits, transformUTC } = require('./utils');
 
 module.exports = function transformer(file, api) {
   const j = getParser(api);
@@ -159,6 +139,8 @@ module.exports = function transformer(file, api) {
         []
       );
     });
+
+  transformUTC(root, j);
 
   return root.toSource({ quote: 'single' });
 };
