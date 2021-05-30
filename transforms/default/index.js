@@ -1,7 +1,7 @@
 const { getParser } = require('codemod-cli').jscodeshift;
 //const { getOptions } = require('codemod-cli');
 
-const { toSingularUnits, transformUTC } = require('./utils');
+const { toSingularUnits, transformUTC, transformGetSet, addPluginAndExtend } = require('./utils');
 
 module.exports = function transformer(file, api) {
   const j = getParser(api);
@@ -33,48 +33,9 @@ module.exports = function transformer(file, api) {
   toSingularUnits(root, j, 'subtract');
 
   // change seconds() to second() / set('second')
-  root.find(j.CallExpression, { callee: { property: { name: 'seconds' } } }).forEach((node) => {
-    if (node.value.arguments.length > 0) {
-      const [seconds] = node.value.arguments;
-
-      const newStatement = j.expressionStatement(
-        j.callExpression(
-          j.memberExpression(
-            j.callExpression(j.identifier('dayjs'), []),
-            j.identifier('set'),
-            false
-          ),
-          [j.literal('second'), j.literal(seconds.value)]
-        )
-      );
-
-      node.parent.replace(newStatement);
-    } else {
-      node.value.callee.property.name = 'second';
-    }
-  });
-
+  transformGetSet(root, j, 'seconds');
   // change hours() to hour() / set('hour')
-  root.find(j.CallExpression, { callee: { property: { name: 'hours' } } }).forEach((node) => {
-    if (node.value.arguments.length > 0) {
-      const [hours] = node.value.arguments;
-
-      const newStatement = j.expressionStatement(
-        j.callExpression(
-          j.memberExpression(
-            j.callExpression(j.identifier('dayjs'), []),
-            j.identifier('set'),
-            false
-          ),
-          [j.literal('hour'), hours]
-        )
-      );
-
-      node.parent.replace(newStatement);
-    } else {
-      node.value.callee.property.name = 'hour';
-    }
-  });
+  transformGetSet(root, j, 'hours');
 
   // change date() to  set('date')
   root.find(j.CallExpression, { callee: { property: { name: 'date' } } }).forEach((node) => {
@@ -141,6 +102,12 @@ module.exports = function transformer(file, api) {
     });
 
   transformUTC(root, j);
+
+  const doyMethods = root.find(j.CallExpression, { callee: { property: { name: 'dayOfYear' } } });
+
+  if (doyMethods.__paths.length > 0) {
+    addPluginAndExtend(root, j, 'dayOfYear');
+  }
 
   return root.toSource({ quote: 'single' });
 };
