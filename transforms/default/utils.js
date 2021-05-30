@@ -77,21 +77,21 @@ function transformUTC(root, j) {
   }
 }
 
-function addPluginAndExtend(root, j, plugin) {
+function addPluginAndExtend(root, j, importName, plugin) {
   let body = root.get().value.program.body;
   const importDecl = j.importDeclaration(
-    [j.importDefaultSpecifier(j.identifier(plugin))],
+    [j.importDefaultSpecifier(j.identifier(importName))],
     j.stringLiteral(plugin)
   );
   const extendStatement = j.expressionStatement(
     j.callExpression(j.memberExpression(j.identifier('dayjs'), j.identifier('extend'), false), [
-      j.identifier(plugin),
+      j.identifier(importName),
     ])
   );
 
   let allImports = root.find(j.ImportDeclaration);
   let oldImport = allImports.find(j.ImportDefaultSpecifier, {
-    local: { name: plugin },
+    local: { name: importName },
   });
   if (oldImport.length === 0) {
     let lastImport = allImports.at(allImports.length - 1);

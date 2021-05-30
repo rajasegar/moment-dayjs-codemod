@@ -28,6 +28,11 @@ module.exports = function transformer(file, api) {
     path.value.callee.name = 'dayjs';
   });
 
+  // Change moment.xyz() to dayjs.xyz()
+  root.find(j.CallExpression, { callee: { object: { name: 'moment' } } }).forEach((path) => {
+    path.value.callee.object.name = 'dayjs';
+  });
+
   toSingularUnits(root, j, 'diff');
   toSingularUnits(root, j, 'add');
   toSingularUnits(root, j, 'subtract');
@@ -82,7 +87,7 @@ module.exports = function transformer(file, api) {
     .find(j.CallExpression, {
       callee: {
         object: {
-          name: 'moment',
+          name: 'dayjs',
         },
 
         property: {
@@ -103,12 +108,123 @@ module.exports = function transformer(file, api) {
 
   transformUTC(root, j);
 
+  // day of year
   const doyMethods = root.find(j.CallExpression, { callee: { property: { name: 'dayOfYear' } } });
 
   if (doyMethods.__paths.length > 0) {
-    addPluginAndExtend(root, j, 'dayOfYear');
+    addPluginAndExtend(root, j, 'dayOfYear', 'dayjs/plugin/dayOfYear');
   }
 
+  // week of year
+  const woyMethods = root.find(j.CallExpression, { callee: { property: { name: 'week' } } });
+
+  if (woyMethods.__paths.length > 0) {
+    addPluginAndExtend(root, j, 'weekOfYear', 'dayjs/plugin/weekOfYear');
+  }
+
+  // isoWeeksInYear
+  const isoWeeksInYear = root.find(j.CallExpression, {
+    callee: { property: { name: 'isoWeeksInYear' } },
+  });
+
+  if (isoWeeksInYear.__paths.length > 0) {
+    addPluginAndExtend(root, j, 'isoWeeksInYear', 'dayjs/plugin/isoWeeksInYear');
+  }
+
+  // min max
+  const minMethods = root.find(j.CallExpression, {
+    callee: {
+      object: { name: 'dayjs' },
+      property: { name: 'min' },
+    },
+  });
+
+  const maxMethods = root.find(j.CallExpression, {
+    callee: {
+      object: { name: 'dayjs' },
+      property: { name: 'max' },
+    },
+  });
+
+  if (minMethods.__paths.length > 0 || maxMethods.__paths.length > 0) {
+    addPluginAndExtend(root, j, 'minMax', 'dayjs/plugin/minMax');
+  }
+
+  // format
+  const formatMethods = root.find(j.CallExpression, {
+    callee: {
+      object: { callee: { name: 'dayjs' } },
+      property: { name: 'format' },
+    },
+  });
+
+  if (formatMethods.__paths.length > 0) {
+    addPluginAndExtend(root, j, 'customParseFormat', 'dayjs/plugin/customParseFormat');
+  }
+
+  // fromNow
+  const fromNowMethods = root.find(j.CallExpression, {
+    callee: {
+      object: { callee: { name: 'dayjs' } },
+      property: { name: 'fromNow' },
+    },
+  });
+
+  const fromMethods = root.find(j.CallExpression, {
+    callee: {
+      object: { callee: { name: 'dayjs' } },
+      property: { name: 'from' },
+    },
+  });
+
+  const toMethods = root.find(j.CallExpression, {
+    callee: {
+      object: { callee: { name: 'dayjs' } },
+      property: { name: 'to' },
+    },
+  });
+
+  const toNowMethods = root.find(j.CallExpression, {
+    callee: {
+      object: { callee: { name: 'dayjs' } },
+      property: { name: 'toNow' },
+    },
+  });
+
+  if (
+    fromNowMethods.__paths.length > 0 ||
+    fromMethods.__paths.length > 0 ||
+    toMethods.__paths.length > 0 ||
+    toNowMethods.__paths.length > 0
+  ) {
+    addPluginAndExtend(root, j, 'relativeTime', 'dayjs/plugin/relativeTime');
+  }
+
+  // isBetween
+  const isBetweenMethods = root.find(j.CallExpression, {
+    callee: {
+      object: { callee: { name: 'dayjs' } },
+      property: { name: 'isBetween' },
+    },
+  });
+
+  if (isBetweenMethods.__paths.length > 0) {
+    addPluginAndExtend(root, j, 'isBetween', 'dayjs/plugin/isBetween');
+  }
+
+  // isLeapYear
+  const isLeapYearMethods = root.find(j.CallExpression, {
+    callee: {
+      object: { callee: { name: 'dayjs' } },
+      property: { name: 'isLeapYear' },
+    },
+  });
+
+  if (isLeapYearMethods.__paths.length > 0) {
+    addPluginAndExtend(root, j, 'isLeapYear', 'dayjs/plugin/isLeapYear');
+  }
+
+  // Return the modified code
   return root.toSource({ quote: 'single' });
 };
 
