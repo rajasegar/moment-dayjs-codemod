@@ -8,20 +8,20 @@ A collection of codemods for migrating from [moment.js](https://momentjs.com/) t
 
 ## Usage
 
-To run a specific codemod from this project, you would run the following:
+To run the codemod , you would run the following:
 
 ```
-npx moment-dayjs-codemod <TRANSFORM NAME> path/of/files/ or/some**/*glob.js
+npx moment-dayjs-codemod path/of/files/ or/some**/*glob.js
 
 # or
 
 yarn global add moment-dayjs-codemod
-moment-dayjs-codemod <TRANSFORM NAME> path/of/files/ or/some**/*glob.js
+moment-dayjs-codemod path/of/files/ or/some**/*glob.js
 ```
 
 ## Local Usage
 ```
-node ./bin/cli.js <TRANSFORM NAME> path/of/files/ or/some**/*glob.js
+node ./bin/cli.js path/of/files/ or/some**/*glob.js
 ```
 
 ## Transforms

@@ -11,6 +11,99 @@ const unitsMap = {
   milliseconds: 'millisecond',
 };
 
+const pluginMethods = [
+  {
+    method: 'fromNow',
+    plugin: 'dayjs/plugin/relativeTime',
+    importName: 'relativeTime',
+    filter: filter('fromNow'),
+  },
+  {
+    method: 'from',
+    plugin: 'dayjs/plugin/relativeTime',
+    importName: 'relativeTime',
+    filter: filter('from'),
+  },
+  {
+    method: 'toNow',
+    plugin: 'dayjs/plugin/relativeTime',
+    importName: 'relativeTime',
+    filter: filter('toNow'),
+  },
+  {
+    method: 'to',
+    plugin: 'dayjs/plugin/relativeTime',
+    importName: 'relativeTime',
+    filter: filter('to'),
+  },
+  {
+    method: 'isBetween',
+    plugin: 'dayjs/plugin/isBetween',
+    importName: 'isBetween',
+    filter: filter('isBetween'),
+  },
+  {
+    method: 'isLeapYear',
+    plugin: 'dayjs/plugin/isLeapYear',
+    importName: 'isLeapYear',
+    filter: filter('isLeapYear'),
+  },
+  {
+    method: 'format',
+    plugin: 'dayjs/plugin/customParseFormat',
+    importName: 'customParseFormat',
+    filter: filter('format'),
+  },
+  {
+    method: 'isoWeeksInYear',
+    plugin: 'dayjs/plugin/isoWeeksInYear',
+    importName: 'isoWeeksInYear',
+    filter: filter('isoWeeksInYear'),
+  },
+  {
+    method: 'min',
+    plugin: 'dayjs/plugin/minMax',
+    importName: 'minMax',
+    filter: filterMinMax('min'),
+  },
+  {
+    method: 'max',
+    plugin: 'dayjs/plugin/minMax',
+    importName: 'minMax',
+    filter: filterMinMax('max'),
+  },
+  {
+    method: 'week',
+    plugin: 'dayjs/plugin/weekOfYear',
+    importName: 'weekOfYear',
+    filter: filter('week'),
+  },
+  {
+    method: 'dayOfYear',
+    plugin: 'dayjs/plugin/dayOfYear',
+    importName: 'dayOfYear',
+    filter: filter('dayOfYear'),
+  },
+];
+
+function filter(method) {
+  return {
+    callee: {
+      object: { callee: { name: 'dayjs' } },
+      property: { name: method },
+    },
+  };
+}
+
+function filterMinMax(method) {
+  return {
+    callee: {
+      object: { name: 'dayjs' },
+      property: { name: method },
+    },
+  };
+}
+
 // change diff units to singular form
 function toSingularUnits(root, j, methodName) {
   root.find(j.CallExpression, { callee: { property: { name: methodName } } }).forEach((node) => {
@@ -127,9 +220,21 @@ function transformGetSet(root, j, unit) {
     }
   });
 }
+
+function transformPluginMethods(root, j) {
+  pluginMethods.forEach((pm) => {
+    const _methods = root.find(j.CallExpression, pm.filter);
+
+    if (_methods.__paths.length > 0) {
+      addPluginAndExtend(root, j, pm.importName, pm.plugin);
+    }
+  });
+}
+
 module.exports = {
   toSingularUnits,
   transformUTC,
   transformGetSet,
   addPluginAndExtend,
+  transformPluginMethods,
 };
