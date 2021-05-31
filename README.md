@@ -28,7 +28,6 @@ node ./bin/cli.js path/of/files/ or/some**/*glob.js
 
 <!--TRANSFORMS_START-->
 * [default](transforms/default/README.md)
-* [utc](transforms/utc/README.md)
 <!--TRANSFORMS_END-->
 
 ## Contributing
