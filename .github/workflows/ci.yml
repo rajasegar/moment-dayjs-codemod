@@ -46,8 +46,10 @@ jobs:
       run: yarn install --frozen-lockfile
     - name: test
       run: yarn test:coverage
-    - name: coverage
-      run: yarn coveralls
+    - name: Coveralls
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
 
   floating-test:
     name: Floating dependencies
